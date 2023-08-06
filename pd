@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+
+projects=()
+
+    # Use a while loop with read to populate the array
+    while IFS= read -r line; do
+      projects+=("$line")
+    done < <(find /Users/huntlycameron/Local\ Sites/wordpresstest/app/public/wp-content/themes /Users/huntlycameron/docker/strut-wp/public_html/wordpress.test/wp-content/themes -mindepth 1 -maxdepth 1 -type d)
+
+
+
+    selected_proj=$(find {/Users/huntlycameron/Local\ Sites/wordpresstest/app/public/wp-content/themes,/Users/huntlycameron/docker/strut-wp/public_html/wordpress.test/wp-content/themes} -mindepth 1 -maxdepth 1 -type d | xargs -L1 -I{} basename "{}" | gum filter)
+
+
+    # find selected project in projects array
+    for i in "${!projects[@]}"; do
+        s=$(basename "${projects[$i]}")
+        if [[ "${s}" = "${selected_proj}" ]]; then
+            selected=${projects[$i]}
+        fi
+    done
+
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+escaped_directory=$(printf "%q" "$selected")
+echo "${escaped_directory}"

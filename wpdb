@@ -1,0 +1,11 @@
+#!/bin/bash
+FILE='/Users/huntlycameron/docker/strut-wp/public_html/wordpress.test/wp-config.php'
+
+# if file exists
+if [ ! -f "$FILE" ]; then
+    echo "File $FILE does not exist"
+    exit 1
+fi
+DB=$(grep -e '^\s*//\s*define' $FILE | cut -d ';' -f 2 | sed 's/\s*\/\/\s*//' | awk '{$1=$1};1' |  gum filter)
+
+php ~/bin/db-switch.php $DB
