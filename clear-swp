@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# count swap files
+count=$(find ~/.local/state/nvim/swap -type f | wc -l)
+
+# trim spaces from count
+count=$(echo $count | tr -d ' ')
+
+# if count is 0 exit
+if [[ $count -eq 0 ]]; then
+    echo "No swap files found."
+    exit 0
+fi
+
+# ask for confirmation
+echo "Found $count swap files."
+read -p "Are you sure you want to clear all swap files? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 0
+fi
+
+echo "Clearing swap files:"
+rm -rvf ~/.local/state/nvim/swap/*
+
+echo
+echo "Files removed"
+
+exit 0
